@@ -6,13 +6,17 @@ using System.Threading.Tasks;
 
 namespace WinFormsApp1
 {
-    internal class NumData
+    internal class CalculatorData
     {
         // num은 Stack으로 구현
-        private Stack<string> num = new Stack<string>();
+        static private Stack<string> num = new Stack<string>();
+        static private string operation = null;
 
-        private bool checkSpecialOperation = false;
-        private bool checkOperation = true;
+        static private double calValue1 = -1;
+        static private double calValue2 = 0;
+
+        static private bool checkSpecialOperation = false;
+        static private bool checkOperation = true;
 
         public string getNum()
         {
@@ -26,7 +30,7 @@ namespace WinFormsApp1
 
         public void setNum(string num)
         {
-            this.num.Push(num);
+            CalculatorData.num.Push(num);
         }
 
         public void ClearNum()
@@ -37,6 +41,44 @@ namespace WinFormsApp1
         public void PopNum()
         {
             num.Pop();
+        }
+
+        public string Op
+        {
+            get
+            {
+                return CalculatorData.operation;
+            }
+
+            set
+            {
+                CalculatorData.operation = value;
+            }
+        }
+
+        public double CalValue1
+        {
+            get
+            {
+                return CalculatorData.calValue1;
+            }
+            set
+            {
+                CalculatorData.calValue1 = value;
+            }
+        }
+
+        public double CalValue2
+        {
+            get
+            {
+                return CalculatorData.calValue2;
+            }
+
+            set
+            {
+                CalculatorData.calValue2 = value;
+            }
         }
 
         public void UseSpecialOperation()

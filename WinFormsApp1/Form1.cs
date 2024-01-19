@@ -5,15 +5,9 @@ namespace WinFormsApp1
 {
     public partial class Form1 : Form
     {
-        Calculator cal = new Calculator();
-        NumData numData = new NumData();
-        private double calValue1 = -1;
-        private double calValue2 = 0;
-        
         private double pastValue = 0;
 
         private string pastOperation = "";
-        private string operation = "";
 
         public Form1()
         {
@@ -159,14 +153,17 @@ namespace WinFormsApp1
         private void BtnRoot_Click(object? sender, EventArgs e)
         {
             Calculator cal = new Calculator();
-            string num = "0";
+            CalculatorData calData = new CalculatorData();
 
-            if (numData.IsOperation() == true && calValue1 >= 0)
+            string num = "0";
+            string operation = calData.Op;
+
+            if (calData.IsOperation() == true && calData.CalValue1 >= 0)
             {
                 num = tbNumeric.Text;
-                tbCalculate.Text = $"{calValue1}{operation}v/({num})";
+                tbCalculate.Text = $"{calData.CalValue1}{operation}v/({num})";
             }
-            else if (numData.IsSpecialOperation() == false)
+            else if (calData.IsSpecialOperation() == false)
             {
                 num = tbNumeric.Text;
                 tbCalculate.Text = $"v/({num})";
@@ -176,22 +173,27 @@ namespace WinFormsApp1
                 num = tbCalculate.Text;
                 tbCalculate.Text = $"v/({num})";
             }
-            calValue2 = double.Parse(tbNumeric.Text);
-            tbNumeric.Text = cal.Root(calValue2).ToString();
-            numData.UseSpecialOperation();
+            calData.CalValue2 = double.Parse(tbNumeric.Text);
+            tbNumeric.Text = cal.Root(calData.CalValue2).ToString();
+            calData.UseSpecialOperation();
+
+            this.ActiveControl = null;
         }
 
         private void BtnSquare_Click(object? sender, EventArgs e)
         {
             Calculator cal = new Calculator();
-            string num = "0";
+            CalculatorData calData = new CalculatorData();
 
-            if (numData.IsOperation() == true && calValue1 >= 0)
+            string num = "0";
+            string operation = calData.Op;
+
+            if (calData.IsOperation() == true && calData.CalValue1 >= 0)
             {
                 num = tbNumeric.Text;
-                tbCalculate.Text = $"{calValue1}{operation}sqr({num})";
+                tbCalculate.Text = $"{calData.CalValue1}{operation}sqr({num})";
             }
-            else if (numData.IsSpecialOperation() == false)
+            else if (calData.IsSpecialOperation() == false)
             {
                 num = tbNumeric.Text;
                 tbCalculate.Text = $"sqr({num})";
@@ -201,22 +203,27 @@ namespace WinFormsApp1
                 num = tbCalculate.Text;
                 tbCalculate.Text = $"sqr({num})";
             }
-            calValue2 = double.Parse(tbNumeric.Text);
-            tbNumeric.Text = cal.Sqaure(calValue2).ToString();
-            numData.UseSpecialOperation();
+            calData.CalValue2 = double.Parse(tbNumeric.Text);
+            tbNumeric.Text = cal.Sqaure(calData.CalValue2).ToString();
+            calData.UseSpecialOperation();
+
+            this.ActiveControl = null;
         }
 
         private void BtnReciprocal_Click(object? sender, EventArgs e)
         {
             Calculator cal = new Calculator();
-            string num = "0";
+            CalculatorData calData = new CalculatorData();
 
-            if (numData.IsOperation() == true && calValue1 >= 0)
+            string num = "0";
+            string operation = calData.Op;
+
+            if (calData.IsOperation() == true && calData.CalValue1 >= 0)
             {
                 num = tbNumeric.Text;
-                tbCalculate.Text = $"{calValue1}{operation}1/({num})";
+                tbCalculate.Text = $"{calData.CalValue1}{operation}1/({num})";
             }
-            else if (numData.IsSpecialOperation() == false)
+            else if (calData.IsSpecialOperation() == false)
             {
                 num = tbNumeric.Text;
                 tbCalculate.Text = $"1/({num})";
@@ -226,118 +233,169 @@ namespace WinFormsApp1
                 num = tbCalculate.Text;
                 tbCalculate.Text = $"1/({num})";
             }
-            calValue2 = double.Parse(tbNumeric.Text);
-            tbNumeric.Text = cal.Reciprocal(calValue2).ToString();
-            numData.UseSpecialOperation();
+            calData.CalValue2 = double.Parse(tbNumeric.Text);
+            tbNumeric.Text = cal.Reciprocal(calData.CalValue2).ToString();
+            calData.UseSpecialOperation();
+
+            this.ActiveControl = null;
         }
 
         private void BtnBack_Click(object? sender, EventArgs e)
         {
+            CalculatorData calData = new CalculatorData();
+
             // 지우기 버튼 클릭
             // 잘못 입력된 숫자 지우기
             try
             {
-                numData.PopNum();
-                tbNumeric.Text = numData.getNum();
+                calData.PopNum();
+                tbNumeric.Text = calData.getNum();
             }
             catch (FormatException exc)
             {
                 Console.WriteLine(exc);
             }
+
+            this.ActiveControl = null;
         }
 
         private void BtnClear_Click(object? sender, EventArgs e)
         {
+            CalculatorData calData = new CalculatorData();
+
             // C버튼 클릭
             // 모두 지우기
-            numData.ClearNum();
-            calValue1 = -1;
-            operation = "";
+            calData.ClearNum();
+            calData.CalValue1 = -1;
+            calData.Op = "";
             tbNumeric.Text = "0";
             tbCalculate.Text = "";
-            numData.NotUseSpecialOperation();
+            calData.NotUseSpecialOperation();
             pastValue = 0;
             pastOperation = "";
+
+            this.ActiveControl = null;
         }
 
         private void BtnOperator_Click(object? sender, EventArgs e)
         {
+            Calculator cal = new Calculator();
+            CalculatorData calData = new CalculatorData();
+
             string num = "";
+            string operation = calData.Op;
             double result = 0;
 
-            if (calValue1 >= 0 && numData.IsOperation() == true)
+            if (calData.CalValue1 >= 0 && calData.IsOperation() == true)
             {
                 num = tbNumeric.Text;
-                calValue2 = double.Parse(num);
+                calData.CalValue2 = double.Parse(num);
+
+                double calValue1 = calData.CalValue1;
+                double calValue2 = calData.CalValue2;
+
                 if (operation == "+")
                 {
-                    result = calValue1 + calValue2;
-                    tbNumeric.Text = cal.Plus(calValue1, calValue2).ToString();
+                    result = cal.Plus(calValue1, calValue2);
+                    tbNumeric.Text = result.ToString();
                 }
                 else if (operation == "-")
                 {
-                    result = calValue1 - calValue2;
-                    tbNumeric.Text = cal.Minus(calValue1, calValue2).ToString();
+                    result = cal.Minus(calValue1, calValue2);
+                    tbNumeric.Text = result.ToString();
                 }
                 else if (operation == "*")
                 {
-                    result = calValue1 * calValue2;
-                    tbNumeric.Text = cal.Multiply(calValue1, calValue2).ToString();
+                    result = cal.Multiply(calValue1, calValue2);
+                    tbNumeric.Text = result.ToString();
                 }
                 else if (operation == "/")
                 {
-                    result = calValue1 / calValue2;
+                    result = cal.Divide(calValue1, calValue2);
                     if (calValue2 == 0)
                         tbNumeric.Text = "0으로 나눌 수 없습니다.";
                     else
-                        tbNumeric.Text = cal.Divide(calValue1, calValue2).ToString();
+                        tbNumeric.Text = result.ToString();
                 }
 
                 if (sender == btnDivide)
-                    operation = "/";
+                {
+                    calData.Op = "/";
+                    operation = calData.Op;
+                }
                 else if (sender == btnMulti)
-                    operation = "*";
+                {
+                    calData.Op = "*";
+                    operation = calData.Op;
+                }
                 else if (sender == btnMinus)
-                    operation = "-";
+                {
+                    calData.Op = "-";
+                    operation = calData.Op;
+                }
                 else if (sender == btnPlus)
-                    operation = "+";
+                {
+                    calData.Op = "+";
+                    operation = calData.Op;
+                }
 
-                numData.NotUseOperation();
-                calValue1 = result;
+                calData.NotUseOperation();
+                calData.CalValue1 = result;
                 tbCalculate.Text = result.ToString() + operation;
-                numData.ClearNum();
+                calData.ClearNum();
             }
             // 아닐 경우 입력받은 수와 연산자를 tbCalculate에 출력
             else
             {
                 if (sender == btnDivide)
-                    operation = "/";
+                {
+                    calData.Op = "/";
+                    operation = calData.Op;
+                }
                 else if (sender == btnMulti)
-                    operation = "*";
+                {
+                    calData.Op = "*";
+                    operation = calData.Op;
+                }
                 else if (sender == btnMinus)
-                    operation = "-";
+                {
+                    calData.Op = "-";
+                    operation = calData.Op;
+                }
                 else if (sender == btnPlus)
-                    operation = "+";
+                {
+                    calData.Op = "+";
+                    operation = calData.Op;
+                }
 
-                numData.NotUseOperation();
+                calData.NotUseOperation();
                 num = tbNumeric.Text;
-                calValue1 = double.Parse(num);
+                calData.CalValue1 = double.Parse(num);
                 tbCalculate.Text = $"{num}{operation}";
-                numData.ClearNum();
+                calData.ClearNum();
+
+                this.ActiveControl = null;
             }
         }
 
         private void BtnEqual_Click(object? sender, EventArgs e)
         {
+            Calculator cal = new Calculator();
+            CalculatorData calData = new CalculatorData();
+
             string num = "";
+            string operation = calData.Op;
 
             // = 연산자
             // 값을 계산하는 연산자
 
             num = tbNumeric.Text;
-            calValue2 = double.Parse(num);
+            calData.CalValue2 = double.Parse(num);
 
-            if (numData.IsSpecialOperation() == true)
+            double calValue1 = calData.CalValue1;
+            double calValue2 = calData.CalValue2;
+
+            if (calData.IsSpecialOperation() == true)
             {
                 tbCalculate.Text += "=";
             }
@@ -405,135 +463,140 @@ namespace WinFormsApp1
                 }
 
             }
-            if (numData.IsOperation())
+            if (calData.IsOperation())
             {
                 pastValue = calValue2;
             }
-            numData.NotUseOperation();
-            numData.NotUseSpecialOperation();
-            calValue1 = -1;
-            numData.ClearNum();
-            operation = "";
+            calData.NotUseOperation();
+            calData.NotUseSpecialOperation();
+            calData.CalValue1 = -1;
+            calData.ClearNum();
+            calData.Op = "";
+
+            this.ActiveControl = null;
         }
 
         // Tag 활용할 수 있음.
         private void ButtonNumber_Click(object? sender, EventArgs e)
         {
-            string num = numData.getNum();
+            CalculatorData calData = new CalculatorData();
+
+            string num = calData.getNum();
 
             if ((Button?)sender == btnZero)
             {
                 if (num == "0")
                 {
-                    numData.PopNum();
-                    numData.setNum("0");
+                    calData.PopNum();
+                    calData.setNum("0");
                 }
                 else
-                    numData.setNum("0");
+                    calData.setNum("0");
             }
             else if ((Button?)sender == btnOne)
             {
                 if (num == "0")
                 {
-                    numData.PopNum();
-                    numData.setNum("1");
+                    calData.PopNum();
+                    calData.setNum("1");
                 }
                 else
-                    numData.setNum("1");
+                    calData.setNum("1");
             }
             else if ((Button?)sender == btnTwo)
             {
                 if (num == "0")
                 {
-                    numData.PopNum();
-                    numData.setNum("2");
+                    calData.PopNum();
+                    calData.setNum("2");
                 }
                 else
-                    numData.setNum("2");
+                    calData.setNum("2");
             }
             else if ((Button?)sender == btnThree)
             {
                 if (num == "0")
                 {
-                    numData.PopNum();
-                    numData.setNum("3");
+                    calData.PopNum();
+                    calData.setNum("3");
                 }
                 else
-                    numData.setNum("3");
+                    calData.setNum("3");
             }
             else if ((Button?)sender == btnFour)
             {
                 if (num == "0")
                 {
-                    numData.PopNum();
-                    numData.setNum("4");
+                    calData.PopNum();
+                    calData.setNum("4");
                 }
                 else
-                    numData.setNum("4");
+                    calData.setNum("4");
             }
             else if ((Button?)sender == btnFive)
             {
                 if (num == "0")
                 {
-                    numData.PopNum();
-                    numData.setNum("5");
+                    calData.PopNum();
+                    calData.setNum("5");
                 }
                 else
-                    numData.setNum("5");
+                    calData.setNum("5");
             }
             else if ((Button?)sender == btnSix)
             {
                 if (num == "0")
                 {
-                    numData.PopNum();
-                    numData.setNum("6");
+                    calData.PopNum();
+                    calData.setNum("6");
                 }
                 else
-                    numData.setNum("6");
+                    calData.setNum("6");
             }
             else if ((Button?)sender == btnSeven)
             {
                 if (num == "0")
                 {
-                    numData.PopNum();
-                    numData.setNum("7");
+                    calData.PopNum();
+                    calData.setNum("7");
                 }
                 else
-                    numData.setNum("7");
+                    calData.setNum("7");
             }
             else if ((Button?)sender == btnEight)
             {
                 if (num == "0")
                 {
-                    numData.PopNum();
-                    numData.setNum("8");
+                    calData.PopNum();
+                    calData.setNum("8");
                 }
                 else
-                    numData.setNum("8");
+                    calData.setNum("8");
             }
             else if ((Button?)sender == btnNine)
             {
                 if (num == "0")
                 {
-                    numData.PopNum();
-                    numData.setNum("9");
+                    calData.PopNum();
+                    calData.setNum("9");
                 }
                 else
-                    numData.setNum("9");
+                    calData.setNum("9");
             }
             else if ((Button?)sender == btnDot)
             {
                 if (num == null)
                 {
-                    numData.setNum("0");
-                    numData.setNum(".");
+                    calData.setNum("0");
+                    calData.setNum(".");
                 }
                 else
-                    numData.setNum(".");
+                    calData.setNum(".");
             }
-            tbNumeric.Text = numData.getNum();
-            numData.UseOperation();
-        }
+            tbNumeric.Text = calData.getNum();
+            calData.UseOperation();
 
+            this.ActiveControl = null;
+        }
     }
 }
